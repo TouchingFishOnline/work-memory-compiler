@@ -11,6 +11,7 @@ class WorkMemoryJsonStore {
       events: path.join(this.stateDir, "events.json"),
       threads: path.join(this.stateDir, "threads.json"),
       decisions: path.join(this.stateDir, "decisions.json"),
+      decisionPatches: path.join(this.stateDir, "decision-patches.json"),
       memoryItems: path.join(this.stateDir, "memory-items.json"),
       config: path.join(this.stateDir, "config.json"),
     };
@@ -23,6 +24,7 @@ class WorkMemoryJsonStore {
     this.ensureArrayFile(this.files.events);
     this.ensureArrayFile(this.files.threads);
     this.ensureArrayFile(this.files.decisions);
+    this.ensureArrayFile(this.files.decisionPatches);
     this.ensureArrayFile(this.files.memoryItems);
     if (!fs.existsSync(this.files.config)) {
       writeJsonFile(this.files.config, clone(DEFAULT_CONFIG));
@@ -66,6 +68,19 @@ class WorkMemoryJsonStore {
   replaceDecisions(decisions) {
     this.writeArray(this.files.decisions, decisions);
     return this.listDecisions();
+  }
+
+  listDecisionPatches() {
+    return this.readArray(this.files.decisionPatches);
+  }
+
+  appendDecisionPatch(decisionPatch) {
+    return this.appendItem(this.files.decisionPatches, decisionPatch);
+  }
+
+  replaceDecisionPatches(decisionPatches) {
+    this.writeArray(this.files.decisionPatches, decisionPatches);
+    return this.listDecisionPatches();
   }
 
   listMemoryItems() {

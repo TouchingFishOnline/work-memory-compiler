@@ -44,6 +44,63 @@ async function main() {
     return;
   }
 
+  if (command === "schedule-status") {
+    const service = createWorkMemoryService();
+    console.log(JSON.stringify(service.reviewScheduleStatus(), null, 2));
+    return;
+  }
+
+  if (command === "review-select-mode") {
+    const service = createWorkMemoryService();
+    console.log(JSON.stringify(service.reviewSelectMode(), null, 2));
+    return;
+  }
+
+  if (command === "md-export") {
+    const service = createWorkMemoryService();
+    console.log(service.exportEditableMarkdown().markdown);
+    return;
+  }
+
+  if (command === "md-apply") {
+    const file = readFlagValue(argv.slice(1), "--file");
+    if (!file) {
+      throw new Error("md-apply --file PATH is required.");
+    }
+    const fs = require("node:fs");
+    const service = createWorkMemoryService();
+    console.log(JSON.stringify(service.applyEditedMarkdown({ markdown: fs.readFileSync(file, "utf8") }), null, 2));
+    return;
+  }
+
+  if (command === "resume") {
+    const service = createWorkMemoryService();
+    console.log(service.resume().markdown);
+    return;
+  }
+
+  if (command === "memory-list") {
+    const service = createWorkMemoryService();
+    console.log(JSON.stringify(service.reviewMemory({ operation: { action: "list" } }).memoryItems, null, 2));
+    return;
+  }
+
+  if (command === "memory-update") {
+    const id = readFlagValue(argv.slice(1), "--id");
+    const summary = readFlagValue(argv.slice(1), "--summary");
+    const service = createWorkMemoryService();
+    console.log(JSON.stringify(service.reviewMemory({ operation: { action: "update", memoryId: id, summary } }), null, 2));
+    return;
+  }
+
+  if (command === "memory-disable" || command === "memory-delete") {
+    const id = readFlagValue(argv.slice(1), "--id");
+    const service = createWorkMemoryService();
+    const action = command === "memory-disable" ? "disable" : "delete";
+    console.log(JSON.stringify(service.reviewMemory({ operation: { action, memoryId: id } }), null, 2));
+    return;
+  }
+
   if (command === "export") {
     const service = createWorkMemoryService();
     console.log(JSON.stringify(service.exportAgentReadable(), null, 2));
@@ -64,6 +121,12 @@ function buildWorkMemoryHelpText() {
     "  snapshot             Print a lightweight thread snapshot.",
     "  review-pack          Print a markdown review pack.",
     "  review-status        Print confirmation-budget review status.",
+    "  schedule-status      Print periodic review schedule status.",
+    "  review-select-mode   Print recommended review interaction mode.",
+    "  md-export            Print editable review markdown.",
+    "  md-apply --file PATH Apply edited review markdown.",
+    "  resume               Print conservative resume context.",
+    "  memory-list          Print long-term memory items.",
     "  export               Print agent-readable JSON.",
   ].join("\n");
 }

@@ -13,6 +13,7 @@ test("json store initializes local-first state files", () => {
   assert.equal(fs.existsSync(path.join(stateDir, "events.json")), true);
   assert.equal(fs.existsSync(path.join(stateDir, "threads.json")), true);
   assert.equal(fs.existsSync(path.join(stateDir, "decisions.json")), true);
+  assert.equal(fs.existsSync(path.join(stateDir, "decision-patches.json")), true);
   assert.equal(fs.existsSync(path.join(stateDir, "memory-items.json")), true);
   assert.equal(fs.existsSync(path.join(stateDir, "config.json")), true);
 });

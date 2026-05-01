@@ -74,6 +74,13 @@ MVP tools:
 - `work_memory_thread_snapshot`
 - `work_memory_review_pack`
 - `work_memory_review_status`
+- `work_memory_schedule_status`
+- `work_memory_review_select_mode`
+- `work_memory_md_export`
+- `work_memory_md_apply`
+- `work_memory_resume`
+- `work_memory_decision_patch`
+- `work_memory_memory_review`
 - `work_memory_commit`
 - `work_memory_export`
 - `work_memory_config_get`
@@ -90,6 +97,13 @@ Existing Cyberboss users can use Work Memory Compiler in two ways:
 - `cyberboss_work_memory_thread_snapshot`
 - `cyberboss_work_memory_review_pack`
 - `cyberboss_work_memory_review_status`
+- `cyberboss_work_memory_schedule_status`
+- `cyberboss_work_memory_review_select_mode`
+- `cyberboss_work_memory_md_export`
+- `cyberboss_work_memory_md_apply`
+- `cyberboss_work_memory_resume`
+- `cyberboss_work_memory_decision_patch`
+- `cyberboss_work_memory_memory_review`
 - `cyberboss_work_memory_commit`
 - `cyberboss_work_memory_export`
 - `cyberboss_work_memory_config_get`
@@ -110,16 +124,16 @@ Implemented:
 - Standalone MCP server.
 - Cyberboss adapter.
 - v0.2 seed: confirmation-budget risk checks and review status.
+- v0.2: periodic schedule status, review mode selection, markdown roundtrip, conservative resume, Decision Patch drafts, and long-term memory review commands.
 
 ## Roadmap Plans
 
 - [v0.2 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.2.md): confirmation budget scheduling, periodic review status, review mode selection, markdown roundtrip, conservative resume, Decision Patch, and long-term memory review commands.
 - [v0.3 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.3.md): local Review UI, batch review operations, decision editor, long-term memory management view, dashboard, custom event schema, and explicit sharing guardrails.
 
-Deferred From v0.1:
+Remaining For v0.3:
 
-- Periodic review reminders.
-- Markdown roundtrip parsing.
-- Conservative resume mode around interruption events.
-- Decision Patch from uploaded materials.
 - Review UI and long-term memory management view.
+- Batch review operations.
+- Decision editor and material linking UI.
+- Custom event schema and dashboard.

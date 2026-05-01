@@ -1,7 +1,13 @@
 const { WorkMemoryCaptureEngine } = require("./capture-engine");
 const { applyCommitDecisions, buildAgentExport } = require("./commit-engine");
+const { buildDecisionPatch } = require("./decision-patch");
 const { WorkMemoryJsonStore } = require("./json-store");
+const { buildEditableReviewMarkdown, parseEditedReviewMarkdown } = require("./markdown-roundtrip");
+const { applyMemoryReviewOperation } = require("./memory-review");
+const { buildResumeSuggestion } = require("./resume-engine");
 const { buildReviewPackMarkdown, buildThreadSnapshot } = require("./review-pack");
+const { evaluateReviewSchedule } = require("./review-schedule");
+const { selectReviewInteraction } = require("./review-selector");
 const { evaluateReviewTrigger } = require("./review-trigger");
 const { normalizeEvent } = require("./schema");
 const { dateKeyFromIso, resolveNow } = require("./time");
@@ -65,6 +71,89 @@ class WorkMemoryService {
     });
   }
 
+  reviewScheduleStatus({ lastReviewAt } = {}) {
+    return evaluateReviewSchedule({
+      config: this.getConfig(),
+      now: resolveNow({ now: this.now }),
+      lastReviewAt,
+    });
+  }
+
+  reviewSelectMode({ counts, hints } = {}) {
+    return selectReviewInteraction({
+      counts: counts || buildReviewCounts({
+        events: this.store.listEvents(),
+        decisions: this.store.listDecisions(),
+        threads: this.store.listThreads(),
+      }),
+      hints,
+    });
+  }
+
+  exportEditableMarkdown({ date } = {}) {
+    return {
+      markdown: buildEditableReviewMarkdown({
+        events: filterEventsByDate(this.store.listEvents(), date),
+        decisions: this.store.listDecisions(),
+        memoryItems: this.store.listMemoryItems(),
+      }),
+    };
+  }
+
+  applyEditedMarkdown({ markdown } = {}) {
+    const operations = parseEditedReviewMarkdown(markdown);
+    const eventDecisions = operations
+      .filter((operation) => operation.targetType === "event")
+      .map((operation) => ({
+        eventId: operation.targetId,
+        action: operation.action,
+        note: operation.note,
+      }));
+    let events = this.store.listEvents();
+    if (eventDecisions.length > 0) {
+      const result = applyCommitDecisions({ events, decisions: eventDecisions });
+      events = mergeEventReviewNotes(result.events, eventDecisions);
+      this.store.replaceEvents(events);
+    }
+    return {
+      operations,
+      applied: operations,
+    };
+  }
+
+  resume({ mode, since } = {}) {
+    const config = this.getConfig();
+    return buildResumeSuggestion({
+      mode: mode || config.resumeSuggestion?.mode || "conservative",
+      events: filterEvents(this.store.listEvents(), { since, limit: 20 }),
+      threads: this.store.listThreads(),
+    });
+  }
+
+  createDecisionPatch({ decisionId, material } = {}) {
+    const decision = this.store.listDecisions().find((item) => item.id === decisionId);
+    if (!decision) {
+      throw new Error(`Decision not found: ${decisionId}`);
+    }
+    const patch = buildDecisionPatch({
+      decision,
+      material,
+      now: resolveNow({ now: this.now }),
+    });
+    this.store.appendDecisionPatch(patch);
+    return { patch };
+  }
+
+  reviewMemory({ operation } = {}) {
+    const result = applyMemoryReviewOperation({
+      memoryItems: this.store.listMemoryItems(),
+      operation,
+      now: resolveNow({ now: this.now }),
+    });
+    this.store.replaceMemoryItems(result.memoryItems);
+    return result;
+  }
+
   commit({ decisions } = {}) {
     const result = applyCommitDecisions({
       events: this.store.listEvents(),
@@ -78,6 +167,7 @@ class WorkMemoryService {
     const events = this.store.listEvents();
     const threads = this.store.listThreads();
     const decisions = this.store.listDecisions();
+    const decisionPatches = this.store.listDecisionPatches ? this.store.listDecisionPatches() : [];
     const memoryItems = this.store.listMemoryItems();
     return buildAgentExport({
       events,
@@ -85,6 +175,7 @@ class WorkMemoryService {
       dirtyBuffer: events.filter(isDirtyBufferEvent),
       confirmedRecords: events.filter((event) => event.status === "committed"),
       decisions,
+      decisionPatches,
       openLoops: collectOpenLoops(threads),
       reminders: collectReminders(events),
       memoryItems,
@@ -99,6 +190,32 @@ class WorkMemoryService {
     const nextConfig = deepMerge(this.getConfig(), patch);
     return this.store.writeConfig(nextConfig);
   }
+}
+
+function buildReviewCounts({ events, decisions, threads }) {
+  const eventList = Array.isArray(events) ? events : [];
+  return {
+    dirtyItems: eventList.filter(isDirtyBufferEvent).length,
+    decisionRecords: Array.isArray(decisions) ? decisions.length : 0,
+    activeThreads: (Array.isArray(threads) ? threads : []).filter((thread) => ["active", "waiting", "ready_to_resume", "needs_clarification"].includes(thread.status)).length,
+  };
+}
+
+function mergeEventReviewNotes(events, decisions) {
+  const notesById = new Map(decisions.filter((decision) => decision.note).map((decision) => [decision.eventId, decision.note]));
+  return events.map((event) => {
+    const note = notesById.get(event.id);
+    if (!note) {
+      return event;
+    }
+    return {
+      ...event,
+      meta: {
+        ...(event.meta && typeof event.meta === "object" ? event.meta : {}),
+        review_note: note,
+      },
+    };
+  });
 }
 
 function filterEvents(events, { since, limit } = {}) {

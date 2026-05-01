@@ -33,12 +33,32 @@ const DEFAULT_CONFIG = {
     allowRiskTriggeredCheck: true,
   },
   resumeSuggestion: { mode: "conservative" },
+  reviewSchedule: {
+    dailyPack: { enabled: true, time: "22:30", format: "short", output: "daily_pack" },
+    weeklyPack: { enabled: false, day: "Sunday", time: "16:00", format: "thread_review", output: "weekly_thread_review" },
+  },
   quickEvents: {
     maxTotalEvents: 8,
     maxEmojisPerEvent: 3,
     definitions: DEFAULT_QUICK_EVENTS,
   },
+  reviewInteractionSelector: {
+    wechatInlineDirtyItemLimit: 8,
+    mdRoundtripDirtyItemThreshold: 8,
+    reviewUiDirtyItemThreshold: 20,
+  },
   reviewPackTemplate: { preset: "standard", customSections: [] },
+  decisionRecords: {
+    enabled: true,
+    autoDetectDecisions: true,
+    requireConfirmationForInferredDecisions: true,
+    allowMaterialPatches: true,
+  },
+  interactionModes: {
+    wechatInline: true,
+    mdRoundtrip: true,
+    reviewUi: false,
+  },
   longTermMemory: {
     enabled: true,
     defaultWritePolicy: "confirmed_only",

@@ -12,6 +12,7 @@ test("work-memory-compiler help prints standalone product name", () => {
   assert.equal(result.status, 0);
   assert.match(result.stdout, /Work Memory Compiler/);
   assert.match(result.stdout, /mcp/);
+  assert.match(result.stdout, /schedule-status/);
 });
 
 test("work-memory-compiler capture writes to configured state dir", () => {
@@ -44,4 +45,16 @@ test("work-memory-compiler snapshot reads captured state", () => {
 
   assert.equal(snapshot.status, 0);
   assert.match(snapshot.stdout, /当前线程截图/);
+});
+
+test("work-memory-compiler schedule-status prints json", () => {
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "wmc-cli-"));
+  const bin = path.resolve(__dirname, "..", "bin", "work-memory-compiler.js");
+  const result = spawnSync(process.execPath, [bin, "schedule-status"], {
+    encoding: "utf8",
+    env: { ...process.env, WORK_MEMORY_COMPILER_STATE_DIR: stateDir },
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /"due"/);
 });
