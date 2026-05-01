@@ -109,15 +109,66 @@ class WorkMemoryService {
         action: operation.action,
         note: operation.note,
       }));
+    const memoryOperations = operations
+      .filter((operation) => operation.targetType === "memory")
+      .map((operation) => ({
+        action: markdownActionToMemoryAction(operation.action),
+        memoryId: operation.targetId,
+        summary: operation.note,
+      }));
+    const unsupportedOperations = operations.filter((operation) => operation.targetType === "decision");
+    const applied = [];
+    const unknown = [];
     let events = this.store.listEvents();
     if (eventDecisions.length > 0) {
       const result = applyCommitDecisions({ events, decisions: eventDecisions });
       events = mergeEventReviewNotes(result.events, eventDecisions);
       this.store.replaceEvents(events);
+      applied.push(...result.applied.map((decision) => ({
+        targetType: "event",
+        targetId: decision.eventId,
+        action: decision.action,
+        note: decision.note || "",
+      })));
+      unknown.push(...result.unknown.map((decision) => ({
+        targetType: "event",
+        targetId: decision.eventId,
+        action: decision.action,
+        note: decision.note || "",
+      })));
     }
+    let memoryItems = this.store.listMemoryItems();
+    for (const operation of memoryOperations) {
+      try {
+        const result = applyMemoryReviewOperation({
+          memoryItems,
+          operation,
+          now: resolveNow({ now: this.now }),
+        });
+        memoryItems = result.memoryItems;
+        applied.push(...result.applied.map((item) => ({
+          targetType: "memory",
+          targetId: item.memoryId,
+          action: item.action,
+          note: "",
+        })));
+      } catch (error) {
+        unknown.push({
+          targetType: "memory",
+          targetId: operation.memoryId,
+          action: operation.action,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+    if (memoryOperations.length > 0) {
+      this.store.replaceMemoryItems(memoryItems);
+    }
+    unknown.push(...unsupportedOperations);
     return {
       operations,
-      applied: operations,
+      applied,
+      unknown,
     };
   }
 
@@ -216,6 +267,19 @@ function mergeEventReviewNotes(events, decisions) {
       },
     };
   });
+}
+
+function markdownActionToMemoryAction(action) {
+  if (action === "keep_draft") {
+    return "list";
+  }
+  if (action === "ignore") {
+    return "disable";
+  }
+  if (action === "confirm") {
+    return "enable";
+  }
+  return action;
 }
 
 function filterEvents(events, { since, limit } = {}) {

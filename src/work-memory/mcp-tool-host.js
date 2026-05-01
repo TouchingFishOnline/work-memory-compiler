@@ -186,7 +186,7 @@ const TOOL_CATALOG = [
         type: "object",
         additionalProperties: false,
         properties: {
-          action: { type: "string" },
+          action: { type: "string", enum: ["list", "update", "delete", "disable", "enable"] },
           memoryId: { type: "string" },
           summary: { type: "string" },
         },
@@ -416,6 +416,9 @@ function validateSchema(schema, value, toolName, path) {
   }
   if (schemaType === "string" && typeof value !== "string") {
     throw new Error(`${toolName} ${path} must be a string.`);
+  }
+  if (Array.isArray(schema.enum) && !schema.enum.includes(value)) {
+    throw new Error(`${toolName} ${path} must be one of: ${schema.enum.join(", ")}.`);
   }
   if (schemaType === "boolean" && typeof value !== "boolean") {
     throw new Error(`${toolName} ${path} must be a boolean.`);

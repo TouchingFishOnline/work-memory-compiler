@@ -38,3 +38,15 @@ test("json store reports corrupt state instead of overwriting it", () => {
   assert.throws(() => store.appendEvent({ id: "evt_2" }), /Failed to read JSON state/);
   assert.equal(fs.readFileSync(eventsFile, "utf8"), "{not-json");
 });
+
+test("json store reports non-array list state instead of treating it as empty", () => {
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "wmc-store-"));
+  const store = new WorkMemoryJsonStore({ stateDir });
+  store.ensure();
+  const eventsFile = path.join(stateDir, "events.json");
+  fs.writeFileSync(eventsFile, '{"events":[]}', "utf8");
+
+  assert.throws(() => store.listEvents(), /Expected JSON array state/);
+  assert.throws(() => store.appendEvent({ id: "evt_2" }), /Expected JSON array state/);
+  assert.equal(fs.readFileSync(eventsFile, "utf8"), '{"events":[]}');
+});

@@ -49,3 +49,31 @@ test("service applies edited event markdown to stored events", () => {
   assert.equal(service.store.listEvents()[0].status, "committed");
   assert.equal(service.store.listEvents()[0].meta.review_note, "可以确认");
 });
+
+test("service applies edited memory markdown to stored memory items", () => {
+  const service = new WorkMemoryService({
+    stateDir: fs.mkdtempSync(path.join(os.tmpdir(), "wmc-md-")),
+    now: () => "2026-05-02T12:00:00+08:00",
+  });
+  service.store.appendMemoryItem({ id: "mem_1", summary: "偏好 A", user_editable: true });
+
+  const result = service.applyEditedMarkdown({
+    markdown: '<!-- wmc:memory id="mem_1" -->\naction: disable\nnote: 不再用于接线\n',
+  });
+
+  assert.equal(result.applied.length, 1);
+  assert.equal(service.store.listMemoryItems()[0].disabled, true);
+});
+
+test("service reports unknown markdown operations instead of marking them applied", () => {
+  const service = new WorkMemoryService({
+    stateDir: fs.mkdtempSync(path.join(os.tmpdir(), "wmc-md-")),
+  });
+
+  const result = service.applyEditedMarkdown({
+    markdown: '<!-- wmc:event id="evt_missing" -->\naction: confirm\n',
+  });
+
+  assert.equal(result.applied.length, 0);
+  assert.equal(result.unknown.length, 1);
+});

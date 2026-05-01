@@ -117,7 +117,10 @@ class WorkMemoryJsonStore {
   readArray(filePath) {
     this.ensure();
     const value = readJsonFile(filePath, []);
-    return Array.isArray(value) ? value : [];
+    if (!Array.isArray(value)) {
+      throw new Error(`Expected JSON array state ${filePath}.`);
+    }
+    return value;
   }
 
   writeArray(filePath, items) {

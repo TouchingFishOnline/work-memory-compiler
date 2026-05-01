@@ -13,6 +13,7 @@ test("work-memory-compiler help prints standalone product name", () => {
   assert.match(result.stdout, /Work Memory Compiler/);
   assert.match(result.stdout, /mcp/);
   assert.match(result.stdout, /schedule-status/);
+  assert.match(result.stdout, /memory-disable/);
 });
 
 test("work-memory-compiler capture writes to configured state dir", () => {

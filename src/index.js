@@ -127,6 +127,9 @@ function buildWorkMemoryHelpText() {
     "  md-apply --file PATH Apply edited review markdown.",
     "  resume               Print conservative resume context.",
     "  memory-list          Print long-term memory items.",
+    "  memory-update        Update a long-term memory item.",
+    "  memory-disable       Disable a long-term memory item.",
+    "  memory-delete        Delete a long-term memory item.",
     "  export               Print agent-readable JSON.",
   ].join("\n");
 }

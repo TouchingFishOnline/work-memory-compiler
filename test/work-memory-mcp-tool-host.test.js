@@ -55,4 +55,12 @@ test("mcp host validates tool input schemas", async () => {
   await assert.rejects(async () => {
     await host.invokeTool("work_memory_thread_snapshot", { unexpected: true });
   }, /work_memory_thread_snapshot input\.unexpected is not allowed/);
+
+  await assert.rejects(async () => {
+    await host.invokeTool("work_memory_resume", { mode: "reckless" });
+  }, /work_memory_resume input\.mode must be one of/);
+
+  await assert.rejects(async () => {
+    await host.invokeTool("work_memory_memory_review", { operation: { action: "rewrite_everything" } });
+  }, /work_memory_memory_review input\.operation\.action must be one of/);
 });
