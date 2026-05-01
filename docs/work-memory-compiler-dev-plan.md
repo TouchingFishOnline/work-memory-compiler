@@ -111,7 +111,12 @@ Implemented:
 - Cyberboss adapter.
 - v0.2 seed: confirmation-budget risk checks and review status.
 
-Deferred:
+## Roadmap Plans
+
+- [v0.2 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.2.md): confirmation budget scheduling, periodic review status, review mode selection, markdown roundtrip, conservative resume, Decision Patch, and long-term memory review commands.
+- [v0.3 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.3.md): local Review UI, batch review operations, decision editor, long-term memory management view, dashboard, custom event schema, and explicit sharing guardrails.
+
+Deferred From v0.1:
 
 - Periodic review reminders.
 - Markdown roundtrip parsing.
