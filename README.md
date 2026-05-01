@@ -36,6 +36,8 @@ work-memory-compiler md-export
 work-memory-compiler md-apply --file review.md
 work-memory-compiler resume
 work-memory-compiler memory-list
+work-memory-compiler dashboard
+work-memory-compiler ui
 work-memory-compiler export
 work-memory-compiler mcp
 ```
@@ -83,6 +85,10 @@ MCP tools:
 - `work_memory_resume`
 - `work_memory_decision_patch`
 - `work_memory_memory_review`
+- `work_memory_batch_review`
+- `work_memory_dashboard`
+- `work_memory_custom_schema_get`
+- `work_memory_custom_schema_set`
 - `work_memory_commit`
 - `work_memory_export`
 - `work_memory_config_get`
@@ -103,6 +109,10 @@ The Cyberboss adapter exposes the same core through prefixed project tools:
 - `cyberboss_work_memory_resume`
 - `cyberboss_work_memory_decision_patch`
 - `cyberboss_work_memory_memory_review`
+- `cyberboss_work_memory_batch_review`
+- `cyberboss_work_memory_dashboard`
+- `cyberboss_work_memory_custom_schema_get`
+- `cyberboss_work_memory_custom_schema_set`
 - `cyberboss_work_memory_commit`
 - `cyberboss_work_memory_export`
 - `cyberboss_work_memory_config_get`
@@ -115,6 +125,20 @@ const { createCyberbossWorkMemoryAdapter } = require("work-memory-compiler/cyber
 ```
 
 The adapter wraps the standalone core. Cyberboss is a host, not the source of truth.
+
+## Review UI
+
+Start the local Review UI:
+
+```bash
+work-memory-compiler ui
+```
+
+The UI binds to `127.0.0.1:37671` by default. To share it outside localhost, pass an explicit host and `--allow-public-bind`:
+
+```bash
+work-memory-compiler ui --host 0.0.0.0 --allow-public-bind
+```
 
 ## Library
 

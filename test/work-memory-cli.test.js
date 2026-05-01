@@ -14,6 +14,8 @@ test("work-memory-compiler help prints standalone product name", () => {
   assert.match(result.stdout, /mcp/);
   assert.match(result.stdout, /schedule-status/);
   assert.match(result.stdout, /memory-disable/);
+  assert.match(result.stdout, /dashboard/);
+  assert.match(result.stdout, /ui/);
 });
 
 test("work-memory-compiler capture writes to configured state dir", () => {
@@ -58,4 +60,17 @@ test("work-memory-compiler schedule-status prints json", () => {
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /"due"/);
+});
+
+test("work-memory-compiler dashboard prints dashboard json", () => {
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "wmc-cli-"));
+  const bin = path.resolve(__dirname, "..", "bin", "work-memory-compiler.js");
+  const result = spawnSync(process.execPath, [bin, "dashboard"], {
+    encoding: "utf8",
+    env: { ...process.env, WORK_MEMORY_COMPILER_STATE_DIR: stateDir },
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /"counts"/);
+  assert.match(result.stdout, /"agentExport"/);
 });

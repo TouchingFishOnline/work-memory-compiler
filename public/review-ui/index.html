@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Work Memory Compiler</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Work Memory Compiler</h1>
+      <nav class="tabs" aria-label="Review UI views">
+        <button data-view="review" class="active">Review</button>
+        <button data-view="decisions">Decisions</button>
+        <button data-view="memory">Memory</button>
+        <button data-view="dashboard">Dashboard</button>
+        <button data-view="settings">Settings</button>
+      </nav>
+    </header>
+    <main>
+      <div id="status" class="status" role="status"></div>
+      <section id="review" class="view active">
+        <div class="section-head">
+          <h2>Review Queue</h2>
+          <button id="refreshButton" type="button">Refresh</button>
+        </div>
+        <div id="reviewQueue" class="list"></div>
+      </section>
+      <section id="decisions" class="view">
+        <h2>Decisions</h2>
+        <div id="decisionList" class="list"></div>
+      </section>
+      <section id="memory" class="view">
+        <h2>Memory</h2>
+        <div id="memoryList" class="list"></div>
+      </section>
+      <section id="dashboard" class="view">
+        <h2>Dashboard</h2>
+        <div id="dashboardCounts" class="metrics"></div>
+        <pre id="dashboardJson" class="json"></pre>
+      </section>
+      <section id="settings" class="view">
+        <h2>Settings</h2>
+        <div id="schemaList" class="list"></div>
+        <label class="field">
+          <span>Custom event schema JSON</span>
+          <textarea id="schemaEditor" rows="10" spellcheck="false"></textarea>
+        </label>
+        <div class="actions">
+          <button id="saveSchemaButton" type="button">Save Schema</button>
+          <button id="resetSchemaButton" type="button">Revert</button>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -195,6 +195,41 @@ const TOOL_CATALOG = [
     }, ["operation"]),
   },
   {
+    name: "work_memory_batch_review",
+    description: "Apply batch review operations across events, threads, decisions, and memory items.",
+    inputSchema: objectSchema({
+      operations: {
+        type: "array",
+        description: "Review operations to apply.",
+        items: {
+          type: "object",
+          additionalProperties: true,
+        },
+      },
+    }, ["operations"]),
+  },
+  {
+    name: "work_memory_dashboard",
+    description: "Build a dashboard summary for review status, open loops, and agent context.",
+    inputSchema: objectSchema({}),
+  },
+  {
+    name: "work_memory_custom_schema_get",
+    description: "Read custom event schema configuration for capture and review UI metadata.",
+    inputSchema: objectSchema({}),
+  },
+  {
+    name: "work_memory_custom_schema_set",
+    description: "Validate and save custom event schema configuration.",
+    inputSchema: objectSchema({
+      schema: {
+        type: "object",
+        description: "Custom event schema with safe typed fields.",
+        additionalProperties: true,
+      },
+    }, ["schema"]),
+  },
+  {
     name: "work_memory_commit",
     description: "Apply review decisions to captured work memory events.",
     inputSchema: objectSchema({
@@ -325,6 +360,35 @@ const TOOL_HANDLERS = {
     return {
       text: `Memory review applied ${result.applied.length} operation${result.applied.length === 1 ? "" : "s"}.`,
       data: result,
+    };
+  },
+
+  work_memory_batch_review(service, args) {
+    const result = service.applyBatchReviewOperations(args);
+    return {
+      text: `Batch review applied ${result.applied.length} operation${result.applied.length === 1 ? "" : "s"}.`,
+      data: result,
+    };
+  },
+
+  work_memory_dashboard(service) {
+    return {
+      text: "Work memory dashboard ready.",
+      data: service.dashboard(),
+    };
+  },
+
+  work_memory_custom_schema_get(service) {
+    return {
+      text: "Custom event schema ready.",
+      data: service.getCustomEventSchema(),
+    };
+  },
+
+  work_memory_custom_schema_set(service, args) {
+    return {
+      text: "Custom event schema updated.",
+      data: service.setCustomEventSchema(args.schema),
     };
   },
 

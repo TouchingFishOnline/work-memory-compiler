@@ -16,6 +16,9 @@
 - `work-memory-compiler memory-update --id mem_1 --summary "new summary"`
 - `work-memory-compiler memory-disable --id mem_1`
 - `work-memory-compiler memory-delete --id mem_1`
+- `work-memory-compiler dashboard`
+- `work-memory-compiler ui`
+- `work-memory-compiler ui --host 0.0.0.0 --allow-public-bind`
 - `work-memory-compiler export`
 - `work-memory-compiler mcp`
 
@@ -26,6 +29,8 @@
 - `node ./bin/work-memory-compiler.js schedule-status`
 - `node ./bin/work-memory-compiler.js md-export`
 - `node ./bin/work-memory-compiler.js resume`
+- `node ./bin/work-memory-compiler.js dashboard`
+- `node ./bin/work-memory-compiler.js ui`
 - `node ./bin/work-memory-compiler.js mcp`
 
 ## Standalone MCP Tools
@@ -41,6 +46,10 @@
 - `work_memory_resume`
 - `work_memory_decision_patch`
 - `work_memory_memory_review`
+- `work_memory_batch_review`
+- `work_memory_dashboard`
+- `work_memory_custom_schema_get`
+- `work_memory_custom_schema_set`
 - `work_memory_commit`
 - `work_memory_export`
 - `work_memory_config_get`
@@ -59,6 +68,10 @@
 - `cyberboss_work_memory_resume`
 - `cyberboss_work_memory_decision_patch`
 - `cyberboss_work_memory_memory_review`
+- `cyberboss_work_memory_batch_review`
+- `cyberboss_work_memory_dashboard`
+- `cyberboss_work_memory_custom_schema_get`
+- `cyberboss_work_memory_custom_schema_set`
 - `cyberboss_work_memory_commit`
 - `cyberboss_work_memory_export`
 - `cyberboss_work_memory_config_get`

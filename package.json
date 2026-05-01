@@ -1,6 +1,6 @@
 {
   "name": "work-memory-compiler",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A local-first work memory compiler for agents and Cyberboss.",
   "license": "AGPL-3.0-only",
   "private": false,
@@ -17,6 +17,7 @@
   },
   "files": [
     "bin/work-memory-compiler.js",
+    "public/review-ui/**",
     "src/index.js",
     "src/work-memory/**/*.js",
     "src/integrations/cyberboss/work-memory-adapter.js",
@@ -33,8 +34,10 @@
     "wmc:review-pack": "node ./bin/work-memory-compiler.js review-pack",
     "wmc:review-status": "node ./bin/work-memory-compiler.js review-status",
     "wmc:schedule-status": "node ./bin/work-memory-compiler.js schedule-status",
+    "wmc:dashboard": "node ./bin/work-memory-compiler.js dashboard",
+    "wmc:ui": "node ./bin/work-memory-compiler.js ui",
     "test:work-memory": "node --test test/work-memory-*.test.js test/cyberboss-work-memory-adapter.test.js",
-    "check:work-memory": "node --check ./src/index.js && node --check ./bin/work-memory-compiler.js && node --check ./src/work-memory/capture-engine.js && node --check ./src/work-memory/commit-engine.js && node --check ./src/work-memory/decision-patch.js && node --check ./src/work-memory/defaults.js && node --check ./src/work-memory/id.js && node --check ./src/work-memory/index.js && node --check ./src/work-memory/json-store.js && node --check ./src/work-memory/markdown-roundtrip.js && node --check ./src/work-memory/mcp-stdio-server.js && node --check ./src/work-memory/mcp-tool-host.js && node --check ./src/work-memory/memory-review.js && node --check ./src/work-memory/memory-service.js && node --check ./src/work-memory/resume-engine.js && node --check ./src/work-memory/review-pack.js && node --check ./src/work-memory/review-schedule.js && node --check ./src/work-memory/review-selector.js && node --check ./src/work-memory/review-trigger.js && node --check ./src/work-memory/schema.js && node --check ./src/work-memory/thread-engine.js && node --check ./src/work-memory/time.js && node --check ./src/integrations/cyberboss/work-memory-adapter.js",
+    "check:work-memory": "node --check ./src/index.js && node --check ./bin/work-memory-compiler.js && node --check ./src/work-memory/capture-engine.js && node --check ./src/work-memory/commit-engine.js && node --check ./src/work-memory/custom-schema.js && node --check ./src/work-memory/dashboard.js && node --check ./src/work-memory/decision-patch.js && node --check ./src/work-memory/defaults.js && node --check ./src/work-memory/id.js && node --check ./src/work-memory/index.js && node --check ./src/work-memory/json-store.js && node --check ./src/work-memory/markdown-roundtrip.js && node --check ./src/work-memory/mcp-stdio-server.js && node --check ./src/work-memory/mcp-tool-host.js && node --check ./src/work-memory/memory-review.js && node --check ./src/work-memory/memory-service.js && node --check ./src/work-memory/resume-engine.js && node --check ./src/work-memory/review-operations.js && node --check ./src/work-memory/review-pack.js && node --check ./src/work-memory/review-schedule.js && node --check ./src/work-memory/review-selector.js && node --check ./src/work-memory/review-trigger.js && node --check ./src/work-memory/schema.js && node --check ./src/work-memory/thread-engine.js && node --check ./src/work-memory/time.js && node --check ./src/work-memory/ui-assets.js && node --check ./src/work-memory/ui-routes.js && node --check ./src/work-memory/ui-server.js && node --check ./src/integrations/cyberboss/work-memory-adapter.js && node --check ./public/review-ui/app.js",
     "check": "npm run check:work-memory"
   }
 }

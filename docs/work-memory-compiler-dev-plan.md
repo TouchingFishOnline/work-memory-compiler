@@ -14,6 +14,8 @@ The implementation is split into three layers:
 work-memory-compiler capture --text "这个点别丢"
 work-memory-compiler snapshot
 work-memory-compiler review-pack
+work-memory-compiler dashboard
+work-memory-compiler ui
 work-memory-compiler export
 work-memory-compiler mcp
 ```
@@ -81,6 +83,10 @@ MVP tools:
 - `work_memory_resume`
 - `work_memory_decision_patch`
 - `work_memory_memory_review`
+- `work_memory_batch_review`
+- `work_memory_dashboard`
+- `work_memory_custom_schema_get`
+- `work_memory_custom_schema_set`
 - `work_memory_commit`
 - `work_memory_export`
 - `work_memory_config_get`
@@ -104,6 +110,10 @@ Existing Cyberboss users can use Work Memory Compiler in two ways:
 - `cyberboss_work_memory_resume`
 - `cyberboss_work_memory_decision_patch`
 - `cyberboss_work_memory_memory_review`
+- `cyberboss_work_memory_batch_review`
+- `cyberboss_work_memory_dashboard`
+- `cyberboss_work_memory_custom_schema_get`
+- `cyberboss_work_memory_custom_schema_set`
 - `cyberboss_work_memory_commit`
 - `cyberboss_work_memory_export`
 - `cyberboss_work_memory_config_get`
@@ -125,15 +135,14 @@ Implemented:
 - Cyberboss adapter.
 - v0.2 seed: confirmation-budget risk checks and review status.
 - v0.2: periodic schedule status, review mode selection, markdown roundtrip, conservative resume, Decision Patch drafts, and long-term memory review commands.
+- v0.3: local Review UI, batch review operations, decision editing, dashboard export, custom event schema config, and explicit sharing guardrails.
 
 ## Roadmap Plans
 
 - [v0.2 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.2.md): confirmation budget scheduling, periodic review status, review mode selection, markdown roundtrip, conservative resume, Decision Patch, and long-term memory review commands.
 - [v0.3 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.3.md): local Review UI, batch review operations, decision editor, long-term memory management view, dashboard, custom event schema, and explicit sharing guardrails.
 
-Remaining For v0.3:
+Remaining After v0.3:
 
-- Review UI and long-term memory management view.
-- Batch review operations.
-- Decision editor and material linking UI.
-- Custom event schema and dashboard.
+- Browser-level polish and usability tuning after real workflow use.
+- Deeper Cyberboss host integration points beyond the prefixed tool adapter.

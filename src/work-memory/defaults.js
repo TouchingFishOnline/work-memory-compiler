@@ -48,6 +48,12 @@ const DEFAULT_CONFIG = {
     reviewUiDirtyItemThreshold: 20,
   },
   reviewPackTemplate: { preset: "standard", customSections: [] },
+  customEventSchema: { fields: [] },
+  reviewUi: {
+    host: "127.0.0.1",
+    port: 37671,
+    allowPublicBind: false,
+  },
   decisionRecords: {
     enabled: true,
     autoDetectDecisions: true,

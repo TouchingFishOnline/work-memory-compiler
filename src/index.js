@@ -101,6 +101,30 @@ async function main() {
     return;
   }
 
+  if (command === "dashboard") {
+    const service = createWorkMemoryService();
+    console.log(JSON.stringify(service.dashboard(), null, 2));
+    return;
+  }
+
+  if (command === "ui") {
+    const { startReviewUiServer } = require("./work-memory/ui-server");
+    const host = readFlagValue(argv.slice(1), "--host") || "127.0.0.1";
+    const portFlag = readFlagValue(argv.slice(1), "--port");
+    const port = portFlag ? Number(portFlag) : 37671;
+    if (!Number.isInteger(port) || port < 0 || port > 65535) {
+      throw new Error("ui --port must be an integer from 0 to 65535.");
+    }
+    const allowPublicBind = argv.includes("--allow-public-bind");
+    const service = createWorkMemoryService();
+    const server = await startReviewUiServer({ service, host, port, allowPublicBind });
+    console.log(`Work Memory Compiler Review UI: ${server.url}`);
+    process.once("SIGINT", () => closeServerAndExit(server));
+    process.once("SIGTERM", () => closeServerAndExit(server));
+    await new Promise(() => {});
+    return;
+  }
+
   if (command === "export") {
     const service = createWorkMemoryService();
     console.log(JSON.stringify(service.exportAgentReadable(), null, 2));
@@ -130,6 +154,8 @@ function buildWorkMemoryHelpText() {
     "  memory-update        Update a long-term memory item.",
     "  memory-disable       Disable a long-term memory item.",
     "  memory-delete        Delete a long-term memory item.",
+    "  dashboard            Print review dashboard JSON.",
+    "  ui                   Start the local Review UI.",
     "  export               Print agent-readable JSON.",
   ].join("\n");
 }
@@ -151,6 +177,16 @@ function readFlagValue(args, flag) {
     }
   }
   return "";
+}
+
+async function closeServerAndExit(server) {
+  try {
+    await server.close();
+    process.exit(0);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
 }
 
 module.exports = { main };

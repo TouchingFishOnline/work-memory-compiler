@@ -1,9 +1,12 @@
 const { WorkMemoryCaptureEngine } = require("./capture-engine");
 const { applyCommitDecisions, buildAgentExport } = require("./commit-engine");
+const { validateCustomEventSchema } = require("./custom-schema");
+const { buildDashboard } = require("./dashboard");
 const { buildDecisionPatch } = require("./decision-patch");
 const { WorkMemoryJsonStore } = require("./json-store");
 const { buildEditableReviewMarkdown, parseEditedReviewMarkdown } = require("./markdown-roundtrip");
 const { applyMemoryReviewOperation } = require("./memory-review");
+const { applyBatchReviewOperations, pickDecisionPatch } = require("./review-operations");
 const { buildResumeSuggestion } = require("./resume-engine");
 const { buildReviewPackMarkdown, buildThreadSnapshot } = require("./review-pack");
 const { evaluateReviewSchedule } = require("./review-schedule");
@@ -203,6 +206,70 @@ class WorkMemoryService {
     });
     this.store.replaceMemoryItems(result.memoryItems);
     return result;
+  }
+
+  reviewQueue() {
+    return {
+      events: this.store.listEvents().filter(isDirtyBufferEvent),
+      threads: this.store.listThreads(),
+      decisions: this.store.listDecisions(),
+      memoryItems: this.store.listMemoryItems(),
+      markdown: this.reviewPack().markdown,
+    };
+  }
+
+  applyBatchReviewOperations({ operations } = {}) {
+    const result = applyBatchReviewOperations({
+      events: this.store.listEvents(),
+      threads: this.store.listThreads(),
+      decisions: this.store.listDecisions(),
+      memoryItems: this.store.listMemoryItems(),
+      operations,
+      now: resolveNow({ now: this.now }),
+    });
+    this.store.replaceEvents(result.events);
+    this.store.replaceThreads(result.threads);
+    this.store.replaceDecisions(result.decisions);
+    this.store.replaceMemoryItems(result.memoryItems);
+    return result;
+  }
+
+  updateDecision({ decisionId, patch } = {}) {
+    const decisions = this.store.listDecisions();
+    const index = decisions.findIndex((decision) => decision.id === decisionId);
+    if (index < 0) {
+      throw new Error(`Decision not found: ${decisionId}`);
+    }
+    const nextDecision = {
+      ...decisions[index],
+      ...pickDecisionPatch(patch || {}),
+      updated_at: resolveNow({ now: this.now }),
+    };
+    decisions[index] = nextDecision;
+    this.store.replaceDecisions(decisions);
+    return { decision: nextDecision };
+  }
+
+  dashboard() {
+    return buildDashboard({
+      events: this.store.listEvents(),
+      threads: this.store.listThreads(),
+      decisions: this.store.listDecisions(),
+      memoryItems: this.store.listMemoryItems(),
+      reviewStatus: this.reviewTriggerStatus(),
+      scheduleStatus: this.reviewScheduleStatus(),
+      agentExport: this.exportAgentReadable(),
+    });
+  }
+
+  getCustomEventSchema() {
+    return validateCustomEventSchema(this.getConfig().customEventSchema || { fields: [] });
+  }
+
+  setCustomEventSchema(schema) {
+    const customEventSchema = validateCustomEventSchema(schema);
+    this.setConfig({ customEventSchema });
+    return customEventSchema;
   }
 
   commit({ decisions } = {}) {
