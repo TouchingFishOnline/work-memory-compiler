@@ -1,0 +1,39 @@
+{
+  "name": "work-memory-compiler",
+  "version": "0.1.0",
+  "description": "A local-first work memory compiler for agents and Cyberboss.",
+  "license": "AGPL-3.0-only",
+  "private": false,
+  "type": "commonjs",
+  "main": "src/work-memory/index.js",
+  "exports": {
+    ".": "./src/work-memory/index.js",
+    "./cli": "./src/index.js",
+    "./cyberboss-adapter": "./src/integrations/cyberboss/work-memory-adapter.js"
+  },
+  "bin": {
+    "work-memory-compiler": "./bin/work-memory-compiler.js",
+    "wmc": "./bin/work-memory-compiler.js"
+  },
+  "files": [
+    "bin/work-memory-compiler.js",
+    "src/index.js",
+    "src/work-memory/**/*.js",
+    "src/integrations/cyberboss/work-memory-adapter.js",
+    "docs/work-memory-compiler-dev-plan.md",
+    "docs/work_memory_compiler_prd_v_0_1.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "wmc:help": "node ./bin/work-memory-compiler.js help",
+    "wmc:mcp": "node ./bin/work-memory-compiler.js mcp",
+    "wmc:snapshot": "node ./bin/work-memory-compiler.js snapshot",
+    "wmc:review-pack": "node ./bin/work-memory-compiler.js review-pack",
+    "wmc:review-status": "node ./bin/work-memory-compiler.js review-status",
+    "test:work-memory": "node --test test/work-memory-*.test.js test/cyberboss-work-memory-adapter.test.js",
+    "check:work-memory": "node --check ./src/index.js && node --check ./bin/work-memory-compiler.js && node --check ./src/work-memory/capture-engine.js && node --check ./src/work-memory/commit-engine.js && node --check ./src/work-memory/defaults.js && node --check ./src/work-memory/id.js && node --check ./src/work-memory/index.js && node --check ./src/work-memory/json-store.js && node --check ./src/work-memory/mcp-stdio-server.js && node --check ./src/work-memory/mcp-tool-host.js && node --check ./src/work-memory/memory-service.js && node --check ./src/work-memory/review-pack.js && node --check ./src/work-memory/review-trigger.js && node --check ./src/work-memory/schema.js && node --check ./src/work-memory/thread-engine.js && node --check ./src/work-memory/time.js && node --check ./src/integrations/cyberboss/work-memory-adapter.js",
+    "check": "npm run check:work-memory"
+  }
+}
