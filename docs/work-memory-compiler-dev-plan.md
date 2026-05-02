@@ -139,8 +139,8 @@ Implemented:
 
 ## Roadmap Plans
 
-- [v0.2 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.2.md): confirmation budget scheduling, periodic review status, review mode selection, markdown roundtrip, conservative resume, Decision Patch, and long-term memory review commands.
-- [v0.3 implementation plan](./superpowers/plans/2026-05-02-work-memory-compiler-v0.3.md): local Review UI, batch review operations, decision editor, long-term memory management view, dashboard, custom event schema, and explicit sharing guardrails.
+- v0.2: confirmation budget scheduling, periodic review status, review mode selection, markdown roundtrip, conservative resume, Decision Patch, and long-term memory review commands.
+- v0.3: local Review UI, batch review operations, decision editor, long-term memory management view, dashboard, custom event schema, and explicit sharing guardrails.
 
 Remaining After v0.3:
 

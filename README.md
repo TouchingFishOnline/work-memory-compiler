@@ -154,3 +154,4 @@ console.log(service.threadSnapshot().markdown);
 
 - [PRD](./docs/work_memory_compiler_prd_v_0_1.md)
 - [Dev plan](./docs/work-memory-compiler-dev-plan.md)
+- [Cyberboss Personal Assistant integration](./docs/cyberboss-personal-assistant-integration.md)

@@ -3,6 +3,14 @@
   "version": "0.3.0",
   "description": "A local-first work memory compiler for agents and Cyberboss.",
   "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TouchingFishOnline/work-memory-compiler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TouchingFishOnline/work-memory-compiler/issues"
+  },
+  "homepage": "https://github.com/TouchingFishOnline/work-memory-compiler#readme",
   "private": false,
   "type": "commonjs",
   "main": "src/work-memory/index.js",
@@ -20,9 +28,7 @@
     "public/review-ui/**",
     "src/index.js",
     "src/work-memory/**/*.js",
-    "src/integrations/cyberboss/work-memory-adapter.js",
-    "docs/work-memory-compiler-dev-plan.md",
-    "docs/work_memory_compiler_prd_v_0_1.md"
+    "src/integrations/cyberboss/work-memory-adapter.js"
   ],
   "engines": {
     "node": ">=22"
